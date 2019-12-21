@@ -53,7 +53,7 @@ namespace CEMU_Mod_Importer
                         GameDropdown.Items.Add(item);
                     }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Color forecolor = Debug.ForeColor;
                     Debug.ForeColor = Color.FromArgb(0xFF, 0x00, 0x00);
@@ -73,13 +73,13 @@ namespace CEMU_Mod_Importer
                 if (CEMU_path.ShowDialog() != DialogResult.OK)
                     return;
             }
-            if(wrongids != 0)
+            if (wrongids != 0)
             {
                 return;
             }
             string ModRules = $"[Definition]\ntitleIds = {string.Join(", ", CurrentMod.TitleIds)}\nname = {CurrentMod.Name}\npath = \"{GameNameTextbox.Text}/Mods/{CurrentMod.Name}\"\ndescription = {CurrentMod.Description}\nversion = {CurrentMod.Version}\nfsPriority = {CurrentMod.fsPriority}";
             Debug.AppendText(ModRules + "\n");
-            FileInfo file = new FileInfo(Path.GetDirectoryName(CEMU_path.FileName) + "\\graphicPacks\\mods\\" + GameNameTextbox.Text + " "+ CurrentMod.Name + "\\rules.txt");
+            FileInfo file = new FileInfo(Path.GetDirectoryName(CEMU_path.FileName) + "\\graphicPacks\\mods\\" + GameNameTextbox.Text + " " + CurrentMod.Name + "\\rules.txt");
             Debug.AppendText(file.FullName);
             Directory.CreateDirectory(file.DirectoryName);
             File.WriteAllText(file.FullName, ModRules);
@@ -92,7 +92,7 @@ namespace CEMU_Mod_Importer
         private void NameBox_TextChanged(object sender, EventArgs e)
         {
             CurrentMod.Name = NameBox.Text;
-            if(NameBox.Text == "")
+            if (NameBox.Text == "")
             {
                 NameBox.BackColor = Color.FromArgb(0xFF, 0x00, 0x00);
             }
@@ -105,7 +105,7 @@ namespace CEMU_Mod_Importer
         private void DescriptionBox_TextChanged(object sender, EventArgs e)
         {
             CurrentMod.Description = DescriptionBox.Text;
-            if(DescriptionBox.Text == "")
+            if (DescriptionBox.Text == "")
             {
                 DescriptionBox.BackColor = Color.FromArgb(0xf4, 0x65, 0x00);
             }
@@ -157,15 +157,41 @@ namespace CEMU_Mod_Importer
 
         private void ImportGameInfoButton_Click(object sender, EventArgs e)
         {
-            TitlekeysJSON_path.ShowDialog();
-            if (File.Exists(TitlekeysJSON_path.FileName))
+            int _return = Import_JSON.ShowDialog();
+            if (_return == -1) return;
+            if (_return == 1)
             {
-                JSON_importer.Instance.Import(File.ReadAllText(TitlekeysJSON_path.FileName));
-                foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                TitlekeysJSON_path.ShowDialog();
+                if (File.Exists(TitlekeysJSON_path.FileName))
                 {
-                    GameDropdown.Items.Add(item);
+                    JSON_importer.Instance.Import(File.ReadAllText(TitlekeysJSON_path.FileName));
+                    foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                    {
+                        GameDropdown.Items.Add(item);
+                    }
                 }
             }
+            if (_return == 2)
+            {
+                string Titlekeyfilter = TitlekeysJSON_path.Filter;
+                TitlekeysJSON_path.Filter = "GameList.json|GameList.json";
+                TitlekeysJSON_path.ShowDialog();
+                if (File.Exists(TitlekeysJSON_path.FileName))
+                {
+                    JSON_importer.Instance.gameInfos = new List<GameInfo>();
+                    foreach (GameInfo info in JsonConvert.DeserializeObject<GameInfo[]>(File.ReadAllText(TitlekeysJSON_path.FileName)))
+                    {
+                        JSON_importer.Instance.gameInfos.Add(info);
+                    }
+                    File.WriteAllText("./GameList.json", JsonConvert.SerializeObject(JSON_importer.Instance.gameInfos));
+                    foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                    {
+                        GameDropdown.Items.Add(item);
+                    }
+                }
+                TitlekeysJSON_path.Filter = Titlekeyfilter;
+            }
+
         }
 
         private void GameDropdown_SelectedIndexChanged(object sender, EventArgs e)
@@ -198,7 +224,7 @@ namespace CEMU_Mod_Importer
                 {
                     if (Directory.Exists(file))
                     {
-                        if(!ModFolders.Contains(file))
+                        if (!ModFolders.Contains(file))
                             ModFolders.Add(file);
                     }
                 }
@@ -216,7 +242,7 @@ namespace CEMU_Mod_Importer
 
         private void GameNameTextbox_TextChanged(object sender, EventArgs e)
         {
-            if(GameNameTextbox.Text == "")
+            if (GameNameTextbox.Text == "")
             {
                 GameNameTextbox.BackColor = Color.FromArgb(0xFF, 0x00, 0x00);
             }
@@ -255,7 +281,7 @@ namespace CEMU_Mod_Importer
 
         private void LoadMod_Click(object sender, EventArgs e)
         {
-            if(Rules_file.ShowDialog() == DialogResult.OK)
+            if (Rules_file.ShowDialog() == DialogResult.OK)
             {
                 FileIniDataParser parser = new FileIniDataParser();
                 IniData data = parser.ReadFile(Rules_file.FileName);
@@ -266,6 +292,28 @@ namespace CEMU_Mod_Importer
                 CurrentMod.Version = Convert.ToInt32(data["Definition"]["version"]);
                 FsPriority.Value = Convert.ToInt32(data["Definition"]["fsPriority"]);
             }
+        }
+    }
+
+    public static class Import_JSON
+    {
+        public static int ShowDialog()
+        {
+            Form prompt = new Form();
+            int _return = -1;
+            prompt.Width = 500;
+            prompt.Height = 150;
+            prompt.Text = "Importing .json";
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from .json Titlekeys site or GameList.json", Width = 300 };
+            Button Titlekey = new Button() { Text = "Titlekeys.json", Left = 50, Width = 100, Top = 70 };
+            Button Gamelist = new Button() { Text = "GameList.json", Left = 200, Width = 100, Top = 70 };
+            Titlekey.Click += (sender, e) => { prompt.Close(); _return = 1; };
+            Gamelist.Click += (sender, e) => { prompt.Close(); _return = 2; };
+            prompt.Controls.Add(Titlekey);
+            prompt.Controls.Add(Gamelist);
+            prompt.Controls.Add(textLabel);
+            prompt.ShowDialog();
+            return _return;
         }
     }
 }
