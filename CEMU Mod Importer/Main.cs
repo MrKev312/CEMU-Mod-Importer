@@ -17,6 +17,28 @@ namespace CEMU_Mod_Importer
         public Main()
         {
             InitializeComponent();
+            if (File.Exists(".\\GameList.json"))
+            {
+                try
+                {
+                    foreach (GameInfo info in JsonConvert.DeserializeObject<GameInfo[]>(File.ReadAllText(".\\GameList.json")))
+                    {
+                        JSON_importer.Instance.gameInfos.Add(info);
+                    }
+                    foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                    {
+                        GameDropdown.Items.Add(item);
+                    }
+                }
+                catch(Exception e)
+                {
+                    Color forecolor = Debug.ForeColor;
+                    Debug.ForeColor = Color.FromArgb(0xFF, 0x00, 0x00);
+                    Debug.AppendText(e.Message);
+                    Debug.ForeColor = forecolor;
+                }
+            }
+
         }
 
         private void NewModButton_Click(object sender, EventArgs e)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 
 namespace CEMU_Mod_Importer
 {
@@ -65,6 +66,7 @@ namespace CEMU_Mod_Importer
                 }
             }
             gameInfos.Sort();
+            File.WriteAllText("./GameList.json", JsonConvert.SerializeObject(gameInfos));
         }
     }
 }
