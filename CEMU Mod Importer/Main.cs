@@ -194,7 +194,7 @@ namespace CEMU_Mod_Importer
         private void ClearModFiles_Click(object sender, EventArgs e)
         {
             ModFolders.Clear();
-            DragDrop.Text = "Drop mod folder on me (the folder containing \"meta / content / aoc\")";
+            DragDrop.Text = "Drop mod folders on me (\"meta / content / aoc\")";
             DragDrop.BackColor = Color.FromArgb(0xFF, 0x00, 0x00);
         }
 
@@ -206,7 +206,7 @@ namespace CEMU_Mod_Importer
         public static void Copy(string sourceDirectory, string targetDirectory)
         {
             DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
-            DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
+            DirectoryInfo diTarget = new DirectoryInfo(targetDirectory + "\\" + diSource.Name);
 
             CopyAll(diSource, diTarget);
         }

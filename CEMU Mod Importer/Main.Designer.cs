@@ -192,7 +192,7 @@
             this.DragDrop.ReadOnly = true;
             this.DragDrop.Size = new System.Drawing.Size(497, 20);
             this.DragDrop.TabIndex = 10;
-            this.DragDrop.Text = "Drop mod folder on me (the folder containing \"meta/content/aoc\")";
+            this.DragDrop.Text = "Drop mod folders on me (\"meta/content/aoc\")";
             this.DragDrop.DragDrop += new System.Windows.Forms.DragEventHandler(this.DragDrop_DragDrop);
             this.DragDrop.DragEnter += new System.Windows.Forms.DragEventHandler(this.DragDrop_DragEnter);
             // 
