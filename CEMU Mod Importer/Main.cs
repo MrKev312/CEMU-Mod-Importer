@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace CEMU_Mod_Importer
 {
@@ -17,6 +18,26 @@ namespace CEMU_Mod_Importer
         public Main()
         {
             InitializeComponent();
+            //load config.json
+            if (File.Exists(".\\Config.json"))
+            {
+                try
+                {
+                    if (File.Exists(JsonConvert.DeserializeObject<Config>(File.ReadAllText(".\\Config.json")).CEMU_path))
+                    {
+                        CEMU_path.FileName = JsonConvert.DeserializeObject<Config>(File.ReadAllText(".\\Config.json")).CEMU_path;
+                        CEMU_Set = true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Color forecolor = Debug.ForeColor;
+                    Debug.ForeColor = Color.FromArgb(0xFF, 0x00, 0x00);
+                    Debug.AppendText(e.Message);
+                    Debug.ForeColor = forecolor;
+                }
+            }
+            //load GameList and populate dropdown
             if (File.Exists(".\\GameList.json"))
             {
                 try
@@ -107,6 +128,10 @@ namespace CEMU_Mod_Importer
         private void CEMU_path_button_Click(object sender, EventArgs e)
         {
             CEMU_Set = CEMU_path.ShowDialog() == DialogResult.OK;
+            if (CEMU_Set)
+            {
+                File.WriteAllText("./Config.json", JsonConvert.SerializeObject(new Config(CEMU_path.FileName)));
+            }
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

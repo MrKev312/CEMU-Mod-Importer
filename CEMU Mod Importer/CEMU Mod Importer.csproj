@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
     <Compile Include="GameInfo.cs" />
     <Compile Include="JSON_importer.cs" />
     <Compile Include="Main.cs">
