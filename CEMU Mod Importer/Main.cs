@@ -92,13 +92,27 @@ namespace CEMU_Mod_Importer
         private void NameBox_TextChanged(object sender, EventArgs e)
         {
             CurrentMod.Name = NameBox.Text;
-            NameBox.BackColor = Color.FromArgb(0x00, 0xff, 0x00);
+            if(NameBox.Text == "")
+            {
+                NameBox.BackColor = Color.FromArgb(0xFF, 0x00, 0x00);
+            }
+            else
+            {
+                NameBox.BackColor = Color.FromArgb(0x00, 0xFF, 0x00);
+            }
         }
 
         private void DescriptionBox_TextChanged(object sender, EventArgs e)
         {
             CurrentMod.Description = DescriptionBox.Text;
-            DescriptionBox.BackColor = Color.FromArgb(0x00, 0xff, 0x00);
+            if(DescriptionBox.Text == "")
+            {
+                DescriptionBox.BackColor = Color.FromArgb(0xf4, 0x65, 0x00);
+            }
+            else
+            {
+                DescriptionBox.BackColor = Color.FromArgb(0x00, 0xFF, 0x00);
+            }
         }
 
         private void TitleIdBox_TextChanged(object sender, EventArgs e)
@@ -202,7 +216,14 @@ namespace CEMU_Mod_Importer
 
         private void GameNameTextbox_TextChanged(object sender, EventArgs e)
         {
-            GameNameTextbox.BackColor = Color.FromArgb(0x00, 0xff, 0x00);
+            if(GameNameTextbox.Text == "")
+            {
+                GameNameTextbox.BackColor = Color.FromArgb(0xFF, 0x00, 0x00);
+            }
+            else
+            {
+                GameNameTextbox.BackColor = Color.FromArgb(0x00, 0xFF, 0x00);
+            }
         }
 
         public static void Copy(string sourceDirectory, string targetDirectory)
