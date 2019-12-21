@@ -58,8 +58,10 @@ namespace CEMU_Mod_Importer
                     }
                     if (added == false)
                     {
-                        GameInfo gameInfo = new GameInfo();
-                        gameInfo.Name = gameInfoJSON.name;
+                        GameInfo gameInfo = new GameInfo
+                        {
+                            Name = gameInfoJSON.name
+                        };
                         gameInfo.Ids.Add(gameInfoJSON.titleID + " [" + gameInfoJSON.region + "]");
                         gameInfos.Add(gameInfo);
                     }

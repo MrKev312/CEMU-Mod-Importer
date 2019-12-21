@@ -13,7 +13,7 @@ namespace CEMU_Mod_Importer
 {
     public partial class Main : Form
     {
-        Mod CurrentMod = new Mod();
+        readonly Mod CurrentMod = new Mod();
         string[] titleids;
         int wrongids = 0;
         bool CEMU_Set = false;

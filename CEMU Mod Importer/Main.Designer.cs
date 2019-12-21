@@ -278,7 +278,7 @@
         private System.Windows.Forms.Button ImportGameInfoButton;
         private System.Windows.Forms.OpenFileDialog TitlekeysJSON_path;
         private System.Windows.Forms.ComboBox GameDropdown;
-        private System.Windows.Forms.TextBox DragDrop;
+        private new System.Windows.Forms.TextBox DragDrop;
         private System.Windows.Forms.Button ClearModFiles;
         private System.Windows.Forms.RichTextBox Debug;
         private System.Windows.Forms.Button LoadMod;

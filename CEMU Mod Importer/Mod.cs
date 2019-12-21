@@ -4,7 +4,6 @@
     {
         public string Name;
         public string[] TitleIds;
-        public string Path;
         public string Description;
         public int Version = 3;
         public int fsPriority = 100;
