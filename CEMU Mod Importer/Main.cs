@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using IniParser;
+using IniParser.Model;
 using System.Xml;
 
 namespace CEMU_Mod_Importer
@@ -75,7 +77,7 @@ namespace CEMU_Mod_Importer
             {
                 return;
             }
-            string ModRules = $"[Definition]\ntitleIds = {string.Join(", ", CurrentMod.TitleIds)}\nname = {CurrentMod.Name}\npath = \"{GameNameTextbox.Text}/Mods/{CurrentMod.Name}\ndescription = {CurrentMod.Description}\nversion = {CurrentMod.Version}\nfsPriority = {CurrentMod.fsPriority}";
+            string ModRules = $"[Definition]\ntitleIds = {string.Join(", ", CurrentMod.TitleIds)}\nname = {CurrentMod.Name}\npath = \"{GameNameTextbox.Text}/Mods/{CurrentMod.Name}\"\ndescription = {CurrentMod.Description}\nversion = {CurrentMod.Version}\nfsPriority = {CurrentMod.fsPriority}";
             Debug.AppendText(ModRules + "\n");
             FileInfo file = new FileInfo(Path.GetDirectoryName(CEMU_path.FileName) + "\\graphicPacks\\mods\\" + GameNameTextbox.Text + " "+ CurrentMod.Name + "\\rules.txt");
             Debug.AppendText(file.FullName);
@@ -227,6 +229,21 @@ namespace CEMU_Mod_Importer
                 DirectoryInfo nextTargetSubDir =
                     target.CreateSubdirectory(diSourceSubDir.Name);
                 CopyAll(diSourceSubDir, nextTargetSubDir);
+            }
+        }
+
+        private void LoadMod_Click(object sender, EventArgs e)
+        {
+            if(Rules_file.ShowDialog() == DialogResult.OK)
+            {
+                FileIniDataParser parser = new FileIniDataParser();
+                IniData data = parser.ReadFile(Rules_file.FileName);
+                TitleIdBox.Text = data["Definition"]["titleIds"];
+                NameBox.Text = data["Definition"]["name"];
+                GameNameTextbox.Text = data["Definition"]["path"].Replace("\"", "").Substring(0, data["Definition"]["path"].Replace("\"", "").IndexOf("/", StringComparison.Ordinal));
+                DescriptionBox.Text = data["Definition"]["description"];
+                CurrentMod.Version = Convert.ToInt32(data["Definition"]["version"]);
+                FsPriority.Value = Convert.ToInt32(data["Definition"]["fsPriority"]);
             }
         }
     }

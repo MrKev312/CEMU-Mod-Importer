@@ -43,6 +43,8 @@
             this.DragDrop = new System.Windows.Forms.TextBox();
             this.ClearModFiles = new System.Windows.Forms.Button();
             this.Debug = new System.Windows.Forms.RichTextBox();
+            this.LoadMod = new System.Windows.Forms.Button();
+            this.Rules_file = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.FsPriority)).BeginInit();
             this.SuspendLayout();
             // 
@@ -218,6 +220,21 @@
             this.Debug.TabIndex = 12;
             this.Debug.Text = "";
             // 
+            // LoadMod
+            // 
+            this.LoadMod.Location = new System.Drawing.Point(93, 12);
+            this.LoadMod.Name = "LoadMod";
+            this.LoadMod.Size = new System.Drawing.Size(75, 23);
+            this.LoadMod.TabIndex = 13;
+            this.LoadMod.Text = "Load Mod";
+            this.LoadMod.UseVisualStyleBackColor = true;
+            this.LoadMod.Click += new System.EventHandler(this.LoadMod_Click);
+            // 
+            // Rules_file
+            // 
+            this.Rules_file.FileName = "rules";
+            this.Rules_file.Filter = "rules.txt|rules.txt";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -225,6 +242,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(29)))), ((int)(((byte)(29)))));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.LoadMod);
             this.Controls.Add(this.Debug);
             this.Controls.Add(this.ClearModFiles);
             this.Controls.Add(this.DragDrop);
@@ -263,6 +281,8 @@
         private System.Windows.Forms.TextBox DragDrop;
         private System.Windows.Forms.Button ClearModFiles;
         private System.Windows.Forms.RichTextBox Debug;
+        private System.Windows.Forms.Button LoadMod;
+        private System.Windows.Forms.OpenFileDialog Rules_file;
     }
 }
 
