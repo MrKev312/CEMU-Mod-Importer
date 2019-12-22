@@ -5,7 +5,7 @@
         public string Name;
         public string[] TitleIds;
         public string Description;
-        public int Version = 3;
+        public int Version = 4;
         public int fsPriority = 100;
     }
 }
