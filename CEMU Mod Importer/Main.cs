@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using IniParser;
 using IniParser.Model;
 using System.Xml;
+using System.Net;
 
 namespace CEMU_Mod_Importer
 {
@@ -157,29 +158,41 @@ namespace CEMU_Mod_Importer
 
         private void ImportGameInfoButton_Click(object sender, EventArgs e)
         {
-            int _return = Import_JSON.ShowDialog();
+            Debug.Text = null;
+            int _return = JSON_importer.ShowDialog();
             if (_return == -1) return;
             if (_return == 1)
             {
-                TitlekeysJSON_path.ShowDialog();
-                if (File.Exists(TitlekeysJSON_path.FileName))
+                if (JSON_importer.EnterSite() == 1)
                 {
-                    JSON_importer.Instance.Import(File.ReadAllText(TitlekeysJSON_path.FileName));
-                    foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                    WebClient client = new WebClient();
+                    try
                     {
-                        GameDropdown.Items.Add(item);
+                        JSON_importer.Instance.Import(client.DownloadString(JSON_importer.Instance.titlekeysite.TrimEnd('/') + "/json.json"));
+                        foreach (GameInfo item in JSON_importer.Instance.gameInfos)
+                        {
+                            GameDropdown.Items.Add(item);
+                        }
                     }
+                    catch (Exception Ex)
+                    {
+                        Debug.Text = Ex.Message;
+                        Debug.AppendText($"\n{JSON_importer.Instance.titlekeysite.TrimEnd('/') + "/json.json"}\nSomething went wrong");
+                    }
+
+                }
+                else
+                {
+                    Debug.Text = "Something went wrong, make sure you typed the correct URL";
                 }
             }
             if (_return == 2)
             {
-                string Titlekeyfilter = TitlekeysJSON_path.Filter;
-                TitlekeysJSON_path.Filter = "GameList.json|GameList.json";
-                TitlekeysJSON_path.ShowDialog();
-                if (File.Exists(TitlekeysJSON_path.FileName))
+                WebClient client = new WebClient();
+                try
                 {
                     JSON_importer.Instance.gameInfos = new List<GameInfo>();
-                    foreach (GameInfo info in JsonConvert.DeserializeObject<GameInfo[]>(File.ReadAllText(TitlekeysJSON_path.FileName)))
+                    foreach (GameInfo info in JsonConvert.DeserializeObject<GameInfo[]>(client.DownloadString("https://raw.githubusercontent.com/mrbob312/CEMU-Mod-Importer/master/GameList.json")))
                     {
                         JSON_importer.Instance.gameInfos.Add(info);
                     }
@@ -189,7 +202,10 @@ namespace CEMU_Mod_Importer
                         GameDropdown.Items.Add(item);
                     }
                 }
-                TitlekeysJSON_path.Filter = Titlekeyfilter;
+                catch(Exception Ex){
+                    Debug.Text = Ex.Message;
+                    Debug.AppendText("Error retrieving from internet, either no working network connection or GitHub is down");
+                }
             }
 
         }
@@ -292,28 +308,6 @@ namespace CEMU_Mod_Importer
                 CurrentMod.Version = Convert.ToInt32(data["Definition"]["version"]);
                 FsPriority.Value = Convert.ToInt32(data["Definition"]["fsPriority"]);
             }
-        }
-    }
-
-    public static class Import_JSON
-    {
-        public static int ShowDialog()
-        {
-            Form prompt = new Form();
-            int _return = -1;
-            prompt.Width = 500;
-            prompt.Height = 150;
-            prompt.Text = "Importing .json";
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from .json Titlekeys site or GameList.json", Width = 300 };
-            Button Titlekey = new Button() { Text = "Titlekeys.json", Left = 50, Width = 100, Top = 70 };
-            Button Gamelist = new Button() { Text = "GameList.json", Left = 200, Width = 100, Top = 70 };
-            Titlekey.Click += (sender, e) => { prompt.Close(); _return = 1; };
-            Gamelist.Click += (sender, e) => { prompt.Close(); _return = 2; };
-            prompt.Controls.Add(Titlekey);
-            prompt.Controls.Add(Gamelist);
-            prompt.Controls.Add(textLabel);
-            prompt.ShowDialog();
-            return _return;
         }
     }
 }
