@@ -1,20 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Windows.Forms;
+using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
 namespace CEMU_Mod_Importer
 {
     class GameInfoJSON
     {
         public string titleID;
-        public string titleKey;
         public string name;
         public string region;
-        public string ticket;
     }
     class JSON_importer
     {
@@ -36,10 +39,32 @@ namespace CEMU_Mod_Importer
             }
         }
         public List<GameInfo> gameInfos = new List<GameInfo>();
-        public string titlekeysite;
-        public void Import(string JSONfile)
+        public void Import()
         {
-            GameInfoJSON[] infoJSON = JsonConvert.DeserializeObject<GameInfoJSON[]>(JSONfile);
+            List<GameInfoJSON> infoJSON = new List<GameInfoJSON>();
+            WebClient client = new WebClient();
+            client.Encoding = Encoding.UTF8;
+            string url = client.DownloadString("https://wiiubrew.org/wiki/Title_database");
+            HtmlDocument htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(url);
+
+            var test = htmlDoc.DocumentNode.SelectNodes(xpath: "//html//body//div[@id='content']//div[@id='bodyContent']//div[@id='mw-content-text']//div[@class='mw-parser-output']//table[6]//tbody").ToList();
+            test[0].FirstChild.Remove();
+            Debug.WriteLine(test.Count);
+
+            foreach (HtmlNode gameRow in test[0].SelectNodes("tr"))
+            {
+                GameInfoJSON gametemp = new GameInfoJSON();
+                Debug.WriteLine("row");
+                var nodes = gameRow.SelectNodes("th|td").ToList();
+                gametemp.titleID = nodes[0].InnerText;
+                gametemp.titleID = gametemp.titleID.Replace("-", "").Replace("\n", "");
+                gametemp.name = nodes[1].InnerText;
+                gametemp.name = gametemp.name.Replace("\n", "");
+                gametemp.region = nodes[6].InnerText;
+                gametemp.region = gametemp.region.Replace("\n", "").Replace("JAP", "JPN");
+                infoJSON.Add(gametemp);
+            }
 
             foreach (GameInfoJSON gameInfoJSON in infoJSON)
             {
@@ -79,42 +104,14 @@ namespace CEMU_Mod_Importer
             prompt.Width = 500;
             prompt.Height = 150;
             prompt.Text = "Importing .json";
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from Titlekeys (manually enter url) site or GitHub", Width = 300 };
-            Button Titlekey = new Button() { Text = "Titlekeys", Left = 50, Width = 100, Top = 70 };
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from the Homebrew database or GitHub", Width = 300 };
+            Button Titlekey = new Button() { Text = "Homebrew", Left = 50, Width = 100, Top = 70 };
             Button Gamelist = new Button() { Text = "GitHub", Left = 200, Width = 100, Top = 70 };
             Titlekey.Click += (sender, e) => { prompt.Close(); _return = 1; };
             Gamelist.Click += (sender, e) => { prompt.Close(); _return = 2; };
             prompt.Controls.Add(Titlekey);
             prompt.Controls.Add(Gamelist);
             prompt.Controls.Add(textLabel);
-            prompt.ShowDialog();
-            return _return;
-        }
-
-        public static int EnterSite()
-        {
-            Form prompt = new Form();
-            int _return = -1;
-            prompt.Width = 500;
-            prompt.Height = 150;
-            prompt.Text = "Importing .json";
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from Titlekeys (manually enter url) site or GitHub", Width = 300 };
-            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400, Text = "Enter URL" };
-            Button Titlekey = new Button() { Text = "Done", Left = 350, Width = 100, Top = 70 };
-            Titlekey.Click += (sender, e) =>
-            {
-                prompt.Close();
-                if (Uri.IsWellFormedUriString(textBox.Text, UriKind.Absolute))
-                {
-                    _return = 1;
-                    JSON_importer.instance.titlekeysite = textBox.Text;
-                }
-                else
-                    _return = -1;
-            };
-            prompt.Controls.Add(Titlekey);
-            prompt.Controls.Add(textLabel);
-            prompt.Controls.Add(textBox);
             prompt.ShowDialog();
             return _return;
         }

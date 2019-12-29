@@ -9,6 +9,7 @@ using IniParser;
 using IniParser.Model;
 using System.Xml;
 using System.Net;
+using System.Text;
 
 namespace CEMU_Mod_Importer
 {
@@ -151,44 +152,31 @@ namespace CEMU_Mod_Importer
             }
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             CurrentMod.fsPriority = Convert.ToInt32(FsPriority.Value);
         }
 
         private void ImportGameInfoButton_Click(object sender, EventArgs e)
         {
-            Debug.Text = null;
+            Debug.Text = "Importing\n";
             int _return = JSON_importer.ShowDialog();
             if (_return == -1) return;
             if (_return == 1)
             {
-                if (JSON_importer.EnterSite() == 1)
+                JSON_importer.Instance.gameInfos = new List<GameInfo>();
+                GameDropdown.Items.Clear();
+                JSON_importer.Instance.Import();
+                foreach (GameInfo item in JSON_importer.Instance.gameInfos)
                 {
-                    WebClient client = new WebClient();
-                    try
-                    {
-                        JSON_importer.Instance.Import(client.DownloadString(JSON_importer.Instance.titlekeysite.TrimEnd('/') + "/json.json"));
-                        foreach (GameInfo item in JSON_importer.Instance.gameInfos)
-                        {
-                            GameDropdown.Items.Add(item);
-                        }
-                    }
-                    catch (Exception Ex)
-                    {
-                        Debug.Text = Ex.Message;
-                        Debug.AppendText($"\n{JSON_importer.Instance.titlekeysite.TrimEnd('/') + "/json.json"}\nSomething went wrong");
-                    }
-
+                    GameDropdown.Items.Add(item);
                 }
-                else
-                {
-                    Debug.Text = "Something went wrong, make sure you typed the correct URL";
-                }
+                Debug.AppendText("Done!\n");
             }
             if (_return == 2)
             {
                 WebClient client = new WebClient();
+                client.Encoding = Encoding.UTF8;
                 try
                 {
                     JSON_importer.Instance.gameInfos = new List<GameInfo>();
@@ -197,12 +185,16 @@ namespace CEMU_Mod_Importer
                         JSON_importer.Instance.gameInfos.Add(info);
                     }
                     File.WriteAllText("./GameList.json", JsonConvert.SerializeObject(JSON_importer.Instance.gameInfos));
+                    GameDropdown.Items.Clear();
                     foreach (GameInfo item in JSON_importer.Instance.gameInfos)
                     {
                         GameDropdown.Items.Add(item);
                     }
+                    Debug.AppendText("Done!\n");
                 }
-                catch(Exception Ex){
+                catch (Exception Ex)
+                {
+                    Debug.AppendText("Error:\n");
                     Debug.Text = Ex.Message;
                     Debug.AppendText("Error retrieving from internet, either no working network connection or GitHub is down");
                 }

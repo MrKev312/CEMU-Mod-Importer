@@ -131,7 +131,7 @@
             0,
             0,
             0});
-            this.FsPriority.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.FsPriority.ValueChanged += new System.EventHandler(this.NumericUpDown1_ValueChanged);
             // 
             // FsPriorityBox
             // 
@@ -177,7 +177,6 @@
             // 
             this.GameDropdown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GameDropdown.FormattingEnabled = true;
             this.GameDropdown.Location = new System.Drawing.Point(174, 14);
             this.GameDropdown.Name = "GameDropdown";
             this.GameDropdown.Size = new System.Drawing.Size(395, 21);
