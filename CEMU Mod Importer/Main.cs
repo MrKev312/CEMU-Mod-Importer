@@ -301,5 +301,45 @@ namespace CEMU_Mod_Importer
                 FsPriority.Value = Convert.ToInt32(data["Definition"]["fsPriority"]);
             }
         }
+
+        private void GameDropdown_Click(object sender, EventArgs e)
+        {
+            if(GameDropdown.Text == "Select game or enter TitleId and gamename below")
+            {
+                GameDropdown.Text = "";
+            }
+        }
+
+        private void NameBox_Click(object sender, EventArgs e)
+        {
+            if (NameBox.Text == "Mod name")
+            {
+                NameBox.Text = "";
+            }
+        }
+
+        private void TitleIdBox_Click(object sender, EventArgs e)
+        {
+            if (TitleIdBox.Text == "Titleids seperated by ,")
+            {
+                TitleIdBox.Text = "";
+            }
+        }
+
+        private void GameNameTextbox_Click(object sender, EventArgs e)
+        {
+            if (GameNameTextbox.Text == "Game Name")
+            {
+                GameNameTextbox.Text = "";
+            }
+        }
+
+        private void DescriptionBox_Click(object sender, EventArgs e)
+        {
+            if (DescriptionBox.Text == "Description")
+            {
+                DescriptionBox.Text = "";
+            }
+        }
     }
 }

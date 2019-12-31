@@ -67,6 +67,7 @@
             this.NameBox.Size = new System.Drawing.Size(75, 20);
             this.NameBox.TabIndex = 1;
             this.NameBox.Text = "Mod name";
+            this.NameBox.Click += new System.EventHandler(this.NameBox_Click);
             this.NameBox.TextChanged += new System.EventHandler(this.NameBox_TextChanged);
             // 
             // DescriptionBox
@@ -81,6 +82,7 @@
             this.DescriptionBox.Size = new System.Drawing.Size(776, 74);
             this.DescriptionBox.TabIndex = 2;
             this.DescriptionBox.Text = "Description";
+            this.DescriptionBox.Click += new System.EventHandler(this.DescriptionBox_Click);
             this.DescriptionBox.TextChanged += new System.EventHandler(this.DescriptionBox_TextChanged);
             // 
             // TitleIdBox
@@ -94,6 +96,7 @@
             this.TitleIdBox.Size = new System.Drawing.Size(476, 20);
             this.TitleIdBox.TabIndex = 3;
             this.TitleIdBox.Text = "Titleids seperated by ,";
+            this.TitleIdBox.Click += new System.EventHandler(this.TitleIdBox_Click);
             this.TitleIdBox.TextChanged += new System.EventHandler(this.TitleIdBox_TextChanged);
             // 
             // CEMU_path
@@ -155,6 +158,7 @@
             this.GameNameTextbox.Size = new System.Drawing.Size(213, 20);
             this.GameNameTextbox.TabIndex = 7;
             this.GameNameTextbox.Text = "Game Name";
+            this.GameNameTextbox.Click += new System.EventHandler(this.GameNameTextbox_Click);
             this.GameNameTextbox.TextChanged += new System.EventHandler(this.GameNameTextbox_TextChanged);
             // 
             // ImportGameInfoButton
@@ -177,11 +181,15 @@
             // 
             this.GameDropdown.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.GameDropdown.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.GameDropdown.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.GameDropdown.Location = new System.Drawing.Point(174, 14);
             this.GameDropdown.Name = "GameDropdown";
             this.GameDropdown.Size = new System.Drawing.Size(395, 21);
             this.GameDropdown.TabIndex = 9;
+            this.GameDropdown.Text = "Select game or enter TitleId and gamename below";
             this.GameDropdown.SelectedIndexChanged += new System.EventHandler(this.GameDropdown_SelectedIndexChanged);
+            this.GameDropdown.Click += new System.EventHandler(this.GameDropdown_Click);
             // 
             // DragDrop
             // 

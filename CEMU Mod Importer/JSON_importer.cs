@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using HtmlDocument = HtmlAgilityPack.HtmlDocument;
 
@@ -60,7 +61,12 @@ namespace CEMU_Mod_Importer
                 gametemp.titleID = nodes[0].InnerText;
                 gametemp.titleID = gametemp.titleID.Replace("-", "").Replace("\n", "");
                 gametemp.name = nodes[1].InnerText;
-                gametemp.name = gametemp.name.Replace("\n", "");
+                gametemp.name = Regex.Replace(
+                    gametemp.name.Replace("\n", "")
+                    //add renaming of BOTW
+                    .Replace("The Legend of Zelda Breath of the Wild", "The Legend of Zelda: Breath of the Wild"),
+                    //removal of trademarks
+                    @"[®™]", "");
                 gametemp.region = nodes[6].InnerText;
                 gametemp.region = gametemp.region.Replace("\n", "").Replace("JAP", "JPN");
                 infoJSON.Add(gametemp);
