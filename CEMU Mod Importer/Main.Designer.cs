@@ -190,6 +190,7 @@
             this.GameDropdown.Text = "Select game or enter TitleId and gamename below";
             this.GameDropdown.SelectedIndexChanged += new System.EventHandler(this.GameDropdown_SelectedIndexChanged);
             this.GameDropdown.Click += new System.EventHandler(this.GameDropdown_Click);
+            this.GameDropdown.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GameDropdown_KeyDown);
             // 
             // DragDrop
             // 

@@ -209,6 +209,19 @@ namespace CEMU_Mod_Importer
             GameNameTextbox.Text = selected.Name;
         }
 
+        private void GameDropdown_KeyDown(object sender, KeyEventArgs e)
+        {
+            GameDropdown.DroppedDown = false;
+        }
+
+        private void GameDropdown_Click(object sender, EventArgs e)
+        {
+            if (GameDropdown.Text == "Select game or enter TitleId and gamename below")
+            {
+                GameDropdown.Text = "";
+            }
+        }
+
         public List<string> ModFolders = new List<string>();
         private void DragDrop_DragEnter(object sender, DragEventArgs e)
         {
@@ -299,14 +312,6 @@ namespace CEMU_Mod_Importer
                 DescriptionBox.Text = data["Definition"]["description"];
                 CurrentMod.Version = Convert.ToInt32(data["Definition"]["version"]);
                 FsPriority.Value = Convert.ToInt32(data["Definition"]["fsPriority"]);
-            }
-        }
-
-        private void GameDropdown_Click(object sender, EventArgs e)
-        {
-            if(GameDropdown.Text == "Select game or enter TitleId and gamename below")
-            {
-                GameDropdown.Text = "";
             }
         }
 
