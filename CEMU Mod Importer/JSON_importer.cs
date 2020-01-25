@@ -110,7 +110,7 @@ namespace CEMU_Mod_Importer
             prompt.Width = 500;
             prompt.Height = 150;
             prompt.Text = "Importing .json";
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from the Homebrew database or GitHub", Width = 300 };
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Import from the Homebrew database or GitHub (recommended)", Width = 300 };
             Button Titlekey = new Button() { Text = "Homebrew", Left = 50, Width = 100, Top = 70 };
             Button Gamelist = new Button() { Text = "GitHub", Left = 200, Width = 100, Top = 70 };
             Titlekey.Click += (sender, e) => { prompt.Close(); _return = 1; };
